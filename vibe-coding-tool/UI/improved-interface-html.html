@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vibe Coding Tool</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/github-dark.min.css">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar for file browsing -->
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <h1 class="logo">Vibe Coding</h1>
+                <button class="btn btn-folder" id="selectFolderBtn" title="選擇資料夾">
+                    <i class="bi bi-folder-plus"></i>
+                </button>
+            </div>
+            <div class="path-display" id="currentPath">未選擇資料夾</div>
+            <div class="file-browser" id="fileTree">
+                <div class="empty-state">
+                    <i class="bi bi-folder2-open"></i>
+                    <p>請選擇一個資料夾以檢視檔案</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main content area -->
+        <div class="main-content">
+            <!-- Top model selector bar -->
+            <div class="model-selector-bar">
+                <div class="dropdown">
+                    <button class="model-dropdown-btn" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="bi bi-cpu"></i>
+                        <span id="currentModelName">Loading models...</span>
+                        <i class="bi bi-chevron-down"></i>
+                    </button>
+                    <ul class="dropdown-menu" id="modelSelector">
+                        <li><a class="dropdown-item">Loading models...</a></li>
+                    </ul>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="onlySelectedFiles" checked>
+                    <label class="form-check-label" for="onlySelectedFiles">只包含選定的檔案</label>
+                </div>
+            </div>
+
+            <!-- Chat area -->
+            <div class="chat-container">
+                <div class="chat-messages" id="responseDisplay">
+                    <div class="welcome-message">
+                        <div class="welcome-icon">
+                            <i class="bi bi-stars"></i>
+                        </div>
+                        <h2>歡迎使用 Vibe Coding Tool</h2>
+                        <p>請在下方輸入您的 prompt，系統將自動為您分析選定的代碼檔案</p>
+                    </div>
+                </div>
+                
+                <div id="loadingIndicator" class="loading-indicator d-none">
+                    <div class="spinner"></div>
+                    <p>正在處理您的請求...</p>
+                </div>
+
+                <!-- Input area -->
+                <div class="input-container">
+                    <div class="prompt-editor">
+                        <textarea id="promptInput" placeholder="請輸入您的 prompt...&#10;系統已固定添加「以 git 方式呈現需要改動的部分」的指示。"></textarea>
+                    </div>
+                    <div class="actions">
+                        <div class="action-buttons">
+                            <button id="copyResponseBtn" class="btn btn-icon" title="複製回覆">
+                                <i class="bi bi-clipboard"></i>
+                            </button>
+                            <button id="editor-toggle-btn" class="btn btn-icon" title="切換至編輯器">
+                                <i class="bi bi-code-slash"></i>
+                            </button>
+                        </div>
+                        <button id="submitPromptBtn" class="btn btn-primary">
+                            <i class="bi bi-send-fill"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Code editor panel (hidden by default) -->
+            <div class="editor-panel" id="editorPanel">
+                <div class="editor-header">
+                    <div class="editor-tabs">
+                        <button class="tab-button active" id="back-to-chat">
+                            <i class="bi bi-chat-left-text"></i> 回到對話
+                        </button>
+                        <div id="currentEditingFile" class="current-file">未選擇檔案</div>
+                    </div>
+                    <button id="saveFileBtn" class="btn btn-save" disabled>
+                        <i class="bi bi-save"></i> 儲存變更
+                    </button>
+                </div>
+                <div id="codeEditor" class="code-editor"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hidden input for folder selection -->
+    <input type="file" id="folderSelector" webkitdirectory directory multiple style="display: none;" />
+
+    <!-- Error modal -->
+    <div class="modal fade" id="errorModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">錯誤</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="errorModalBody">
+                    發生錯誤
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">關閉</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.14/ace.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/showdown/2.1.0/showdown.min.js"></script>
+    <script src="scripts.js"></script>
+</body>
+</html>

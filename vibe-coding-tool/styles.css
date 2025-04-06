@@ -1,0 +1,126 @@
+/* 基本樣式 */
+html, body {
+    height: 100%;
+    overflow: hidden;
+}
+
+.container-fluid {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+}
+
+.main-container {
+    flex: 1;
+    overflow: hidden;
+}
+
+.row {
+    height: 100%;
+}
+
+/* 檔案瀏覽區樣式 */
+.file-browser-section {
+    border-right: 1px solid #dee2e6;
+    height: 100%;
+}
+
+#fileTree {
+    overflow-y: auto;
+    max-height: calc(100vh - 150px);
+}
+
+.file-item {
+    padding: 4px 8px;
+    cursor: pointer;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+}
+
+.file-item:hover {
+    background-color: #f0f0f0;
+}
+
+.file-item.selected {
+    background-color: #e2f0ff;
+}
+
+.file-checkbox {
+    margin-right: 8px;
+}
+
+.folder-icon {
+    margin-right: 5px;
+    color: #ffc107;
+}
+
+.file-icon {
+    margin-right: 5px;
+    color: #6c757d;
+}
+
+/* Prompt區域樣式 */
+.prompt-section {
+    height: 30%;
+    border-bottom: 1px solid #dee2e6;
+}
+
+#promptInput {
+    resize: none;
+}
+
+/* 回覆區域樣式 */
+.response-section {
+    height: 70%;
+}
+
+.markdown-body {
+    font-size: 0.9rem;
+}
+
+.markdown-body pre {
+    background-color: #282c34;
+    border-radius: 6px;
+    padding: 16px;
+}
+
+/* 編輯器樣式 */
+#codeEditor {
+    width: 100%;
+    height: calc(100% - 40px);
+}
+
+/* 自定義樣式 */
+.file-tree-indent {
+    margin-left: 20px;
+}
+
+.file-tree-folder {
+    cursor: pointer;
+    user-select: none;
+}
+
+/* 動畫效果 */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.fade-in {
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+.btn-primary {
+    transition: all 0.2s ease-in-out;
+}
+
+.btn-primary:active {
+    transform: scale(0.97);
+}
+
+#loadingIndicator .spinner-border {
+    width: 3rem;
+    height: 3rem;
+}
